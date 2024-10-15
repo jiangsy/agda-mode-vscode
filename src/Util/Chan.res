@@ -154,7 +154,8 @@ module EventEmitter3 = {
   external prependOnceListener3: (t, eventName, listener3<'a, 'b, 'c>) => t = "prependOnceListener"
   let prependOnceListener3 = (arg1, arg2, obj) => obj->prependOnceListener3(arg1, arg2)
 
-  @bs.send.pipe(: t) external removeAllListeners: t = "removeAllListeners"
+  @send
+  external removeAllListeners: t => t = "removeAllListeners"
 
   // @send
   // external removeAllListeners: t => t = "removeAllListeners"
