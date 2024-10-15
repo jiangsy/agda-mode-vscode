@@ -87,7 +87,7 @@ let destroy = (state, alsoRemoveFromRegistry) => {
 }
 
 let make = (channels, globalStoragePath, extensionPath, editor) => {
-  editor: editor,
+  editor,
   document: VSCode.TextEditor.document(editor),
   panelCache: ViewCache.make(),
   runningInfoLog: [],
@@ -100,7 +100,7 @@ let make = (channels, globalStoragePath, extensionPath, editor) => {
   subscriptions: [],
   onRemoveFromRegistry: Chan.make(),
   agdaRequestQueue: RequestQueue.make(),
-  globalStoragePath: globalStoragePath,
-  extensionPath: extensionPath,
-  channels: channels,
+  globalStoragePath,
+  extensionPath,
+  channels,
 }

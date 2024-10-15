@@ -31,7 +31,8 @@ module Input = {
   let fromTextDocumentChangeEvent = (editor, event) => {
     // see if the change event happened in this TextEditor
     let fileName = editor->VSCode.TextEditor.document->VSCode.TextDocument.fileName->Parser.filepath
-    let eventFileName = event->VSCode.TextDocumentChangeEvent.document->VSCode.TextDocument.fileName->Parser.filepath
+    let eventFileName =
+      event->VSCode.TextDocumentChangeEvent.document->VSCode.TextDocument.fileName->Parser.filepath
     if fileName == eventFileName {
       // TextDocumentContentChangeEvent.t => Buffer.change
       event
@@ -84,7 +85,7 @@ module type Module = {
   let make: Chan.t<Log.t> => t
   let isActivated: t => bool
 
-  // To enable input '\' in editor, 
+  // To enable input '\' in editor,
   // we need to check whether buffer is empty when input method is activated
   // (Actually, we don't need this function, but I somehow can't get field instances from IM.t in State__InputMethod.res)
   let bufferIsEmpty: t => bool
@@ -104,7 +105,7 @@ module Module: Module = {
     let make = (editor, interval) =>
       switch editor {
       | None => {
-          interval: interval,
+          interval,
           decoration: None,
           buffer: Buffer.make(),
         }
@@ -112,7 +113,7 @@ module Module: Module = {
         let document = VSCode.TextEditor.document(editor)
         let range = Editor.Range.fromInterval(document, interval)
         {
-          interval: interval,
+          interval,
           decoration: Some(Editor.Decoration.underlineText(editor, range)),
           buffer: Buffer.make(),
         }
@@ -154,7 +155,7 @@ module Module: Module = {
       instances: [],
       activated: false,
       semaphore: false,
-      chanLog: chanLog,
+      chanLog,
     }
   }
 
@@ -175,6 +176,7 @@ module Module: Module = {
         intervals->Array.some(((start, end_)) =>
           Instance.withIn(instance, start) && Instance.withIn(instance, end_)
         )
+
       // if not, the instance gets destroyed
       if !survived {
         Instance.destroy(instance)
@@ -285,7 +287,7 @@ module Module: Module = {
             Js.Array.push(
               {
                 interval: (start, end_),
-                text: text,
+                text,
                 instance: buffer.translation.further ? Some(instance) : None,
               },
               rewrites,
@@ -344,9 +346,11 @@ module Module: Module = {
     promise->Promise.get(() => {
       // redecorate instances
       rewrites->Array.forEach(rewrite => {
-        rewrite.instance->Option.forEach(instance => {
-          editor->Option.forEach(Instance.redecorate(instance))
-        })
+        rewrite.instance->Option.forEach(
+          instance => {
+            editor->Option.forEach(Instance.redecorate(instance))
+          },
+        )
       })
 
       // unlock the semaphore
@@ -390,6 +394,7 @@ module Module: Module = {
     | MouseSelect(intervals) =>
       if self.activated && !self.semaphore {
         self.instances = validateCursorPositions(self.instances, intervals)
+
         // deactivate if all instances have been destroyed
         if Js.Array.length(self.instances) == 0 {
           run(self, editor, Deactivate)

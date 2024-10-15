@@ -9,7 +9,9 @@ let make = (~candidates: array<string>, ~index: int, ~onChooseSymbol: string => 
   <div className="agda-mode-keyboard-candidates">
     {switch candidates[index] {
     | None => <> </>
-    | Some(_) => row->Array.mapWithIndex((i, key) => {
+    | Some(_) =>
+      row
+      ->Array.mapWithIndex((i, key) => {
         let isSelected = rowStart + i === index
         <button
           className={"agda-mode-key " ++ (isSelected ? "selected" : "")}
@@ -17,7 +19,8 @@ let make = (~candidates: array<string>, ~index: int, ~onChooseSymbol: string => 
           key>
           {string(key)}
         </button>
-      })->array
+      })
+      ->array
     }}
   </div>
 }

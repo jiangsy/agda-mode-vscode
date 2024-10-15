@@ -108,33 +108,8 @@ let rec handle = (
     state.tokens->Tokens.clear
     state.highlighting->Highlighting.clear
     Promise.resolved(Ok())
-  | Status(_checked, _displayImplicit) =>
-    // display(
-    //   "Status",
-    //   Some(
-    //     "Typechecked: "
-    //     ++ string_of_bool(checked)
-    //     ++ "\nDisplay implicit arguments: "
-    //     ++ string_of_bool(displayImplicit),
-    //   ),
-    // ),
-    Promise.resolved(Ok())
+  | Status(_checked, _displayImplicit) => Promise.resolved(Ok())
 
-  // if (displayImplicit || checked) {
-  //   [
-  //     display(
-  //       "Status",
-  //       Some(
-  //         "Typechecked: "
-  //         ++ string_of_bool(checked)
-  //         ++ "\nDisplay implicit arguments: "
-  //         ++ string_of_bool(displayImplicit),
-  //       ),
-  //     ),
-  //   ];
-  // } else {
-  //   [];
-  // }
   | JumpToError(filepath, offset) =>
     // only jump to site of error
     // when it's on the same file

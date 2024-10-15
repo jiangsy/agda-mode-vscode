@@ -142,6 +142,17 @@ let getLibraryPath = () => {
 
 module Highlighting = {
   // Highlighting method
+  // let getSemanticHighlighting = () => {
+  //   let raw =
+  //     Workspace.getConfiguration(Some("agdaMode"), None)->WorkspaceConfiguration.get(
+  //       "highlighting.semanticHighlighting.enabled",
+  //     )
+  //   switch raw {
+  //   | Some(true) => true
+  //   | Some(false) => false
+  //   | _ => true
+  //   }
+  // }
   let getHighlightingMethod = () => {
     let raw =
       Workspace.getConfiguration(Some("agdaMode"), None)->WorkspaceConfiguration.get(

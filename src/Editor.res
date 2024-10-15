@@ -221,12 +221,12 @@ let reveal = (editor, range) =>
   editor->TextEditor.revealRange(range, Some(TextEditorRevealType.InCenterIfOutsideViewport))
 
 module Provider = {
-  let documentSelector =
-    [VSCode.StringOr.string("agda")
-    ,VSCode.StringOr.string("lagda-md")
-    ,VSCode.StringOr.string("lagda-rst")
-    ,VSCode.StringOr.string("lagda-tex")
-    ]
+  let documentSelector = [
+    VSCode.StringOr.string("agda"),
+    VSCode.StringOr.string("lagda-md"),
+    VSCode.StringOr.string("lagda-rst"),
+    VSCode.StringOr.string("lagda-tex"),
+  ]
   let registerDefinitionProvider = definitionProvider => {
     open DefinitionProvider
     Languages.registerDefinitionProvider(
@@ -377,8 +377,8 @@ module Provider = {
         ~provideDocumentSemanticTokensEdits: option<provideDocumentSemanticTokensEdits>=?,
         (),
       ) => {
-        provideDocumentSemanticTokens: provideDocumentSemanticTokens,
-        provideDocumentSemanticTokensEdits: provideDocumentSemanticTokensEdits,
+        provideDocumentSemanticTokens,
+        provideDocumentSemanticTokensEdits,
       }
     }
 

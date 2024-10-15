@@ -74,10 +74,12 @@ let make = (
       inputRef.current
       ->Js.Nullable.toOption
       ->Option.forEach(input => {
-        selectionInterval->Option.forEach(((start, end_)) => {
-          let setSelectionRange = %raw(`(elem, start, end_) => elem.setSelectionRange(start, end_)`)
-          input->setSelectionRange(start, end_)->ignore
-        })
+        selectionInterval->Option.forEach(
+          ((start, end_)) => {
+            let setSelectionRange = %raw(`(elem, start, end_) => elem.setSelectionRange(start, end_)`)
+            input->setSelectionRange(start, end_)->ignore
+          },
+        )
       })
 
       // HACK
@@ -89,7 +91,7 @@ let make = (
           ->Js.Nullable.toOption
           ->Option.flatMap(Webapi.Dom.Element.asHtmlElement)
           ->Option.forEach(Webapi.Dom.HtmlElement.focus)
-          // only set focus for the first open 
+          // only set focus for the first open
           setHasFocused(_ => true)
         }
         ()

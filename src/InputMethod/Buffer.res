@@ -88,7 +88,10 @@ let update = (self, start, change: change): (t, option<string>) => {
     beforeInsertedText ++ (change.insertedText ++ afterInsertedText)
   }
 
-  let translation = Translator.translate(newSequence, Some({lastTranslation: self.translation, candidateIndex: self.candidateIndex}))
+  let translation = Translator.translate(
+    newSequence,
+    Some({lastTranslation: self.translation, candidateIndex: self.candidateIndex}),
+  )
   switch translation.symbol {
   | None =>
     if translation.further {
@@ -96,26 +99,26 @@ let update = (self, start, change: change): (t, option<string>) => {
         // special case of INSERTION
         // reduce unnecessary rewriting
         let diff = Js.String.substringToEnd(~from=String.length(sequence), newSequence)
-        let buffer = {...self, tail: self.tail ++ diff, translation: translation}
+        let buffer = {...self, tail: self.tail ++ diff, translation}
         (buffer, None)
       } else {
         let buffer = {
           symbol: None,
           tail: newSequence,
-          translation: translation,
+          translation,
           candidateIndex: self.candidateIndex,
         }
         (buffer, Some(toSurface(buffer)))
       }
     } else {
-      let buffer = {...self, translation: translation}
+      let buffer = {...self, translation}
       (buffer, None)
     }
   | Some(symbol) =>
     let buffer = {
       symbol: Some((symbol, newSequence)),
       tail: "",
-      translation: translation,
+      translation,
       candidateIndex: self.candidateIndex,
     }
     (buffer, Some(toSurface(buffer)))

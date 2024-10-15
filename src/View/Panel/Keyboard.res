@@ -11,11 +11,11 @@ let reducer = (state, action) =>
   switch (state, action) {
   | (_, View.EventToView.InputMethod.Activate) =>
     let translation = Translator.translate("", None)
-    Some({sequence: "", translation: translation, candidateIndex: 0})
+    Some({sequence: "", translation, candidateIndex: 0})
   | (_, Deactivate) => None
   | (None, _) => None
   | (Some(_), Update(sequence, translation, candidateIndex)) =>
-    Some({sequence: sequence, translation: translation, candidateIndex: candidateIndex})
+    Some({sequence, translation, candidateIndex})
   | (Some(state), BrowseUp) => Some({...state, candidateIndex: max(0, state.candidateIndex - 10)})
   | (Some(state), BrowseRight) =>
     Some({

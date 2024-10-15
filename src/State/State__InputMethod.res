@@ -195,8 +195,7 @@ module Module: Module = {
         )
       }
       // else reactivate it
-      EditorIM.deactivate(state)
-      ->Promise.flatMap(() => EditorIM.activate(state))
+      EditorIM.deactivate(state)->Promise.flatMap(() => EditorIM.activate(state))
     | Prompt =>
       // deactivate the prompt IM
       PromptIM.deactivate(state)->Promise.flatMap(() => {

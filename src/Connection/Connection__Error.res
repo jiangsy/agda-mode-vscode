@@ -1,4 +1,4 @@
-open Belt 
+open Belt
 
 type t =
   // Emacs related

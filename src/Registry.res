@@ -43,9 +43,7 @@ module Module: {
       state.highlighting->Highlighting.getSemanticTokens->resolve
       // set the entry as Initialized
       dict->Js.Dict.set(fileName, Initialized(state))
-    | Some(Initialized(_)) =>
-      // do nothing
-      // Js.log("[ add ][ Initialized ]" ++ fileName)
+    | Some(Initialized(_)) => // do nothing
       ()
     | None =>
       // Js.log("[ add ][ None ]" ++ fileName)
@@ -77,8 +75,7 @@ module Module: {
   // add PendingInit(_) to the Registry if the entry has not been created yet
   let requestSemanticTokens = fileName =>
     switch get'(fileName) {
-    | Some(PendingInit(promise, _resolve)) =>
-      // Js.log("[ req ][ PendingInit ]" ++ fileName)
+    | Some(PendingInit(promise, _resolve)) => // Js.log("[ req ][ PendingInit ]" ++ fileName)
       promise
     | Some(Initialized(state)) =>
       // Js.log("[ req ][ Initialized ]" ++ fileName)
