@@ -2,6 +2,7 @@
 test/globalStoragePath
 *.agdai
 
+.vscode/*
 
 .DS_Store
 *.vsix
