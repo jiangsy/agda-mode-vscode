@@ -1,6 +1,7 @@
 // from Agda Response to Tasks
 open Belt
 
+let canonicalizeEscape = content => Js.String.replaceByRe(%re("/\\n|\\r\\n/g"), "\n", content)
 let removeNewlines = string => string->Js.String2.split("\n")->Belt.Array.joinWith("\n", x => x)
 
 open Response
@@ -163,7 +164,7 @@ let rec handle = (
         // do nothing
         State__Goal.removeBoundaryAndDestroy(state, goal)->Promise.map(() => Ok())
       | GiveString(content) =>
-        State__Goal.modify(state, goal, _ => Js.String.replaceByRe(%re("/\\\\n/g"), "\n", content))
+        State__Goal.modify(state, goal, _ => canonicalizeEscape(content))
         ->Promise.flatMap(() => State__Goal.removeBoundaryAndDestroy(state, goal))
         ->Promise.map(() => Ok())
       }
@@ -204,7 +205,7 @@ let rec handle = (
 
   | DisplayInfo(info) => DisplayInfo.handle(state, info)->Promise.map(() => Ok())
   | RunningInfo(1, message) =>
-    let message = removeNewlines(message)
+    let message = removeNewlines(canonicalizeEscape(message))
     State.View.Panel.displayInAppendMode(
       state,
       Plain("Type-checking"),

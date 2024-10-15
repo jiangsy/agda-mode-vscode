@@ -80,10 +80,10 @@ module DisplayInfo = {
     | Version(string) => "Version " ++ string
     }
 
-  let parse = (xs: array<Token.t>): option<t> =>{
+  let parse = (xs: array<Token.t>): option<t> => {
     switch xs[1] {
     | Some(A(rawPayload)) =>
-      // there are some explicitly escaped EOLs like "\n" or "\r\n" in the s-expressions 
+      // there are some explicitly escaped EOLs like "\n" or "\r\n" in the s-expressions
       // we need to replace them with actual EOLs
       let payload = Js.String.replaceByRe(%re("/\\n|\\r\\n/g"), "\n", rawPayload)
       switch xs[0] {
@@ -111,11 +111,12 @@ module DisplayInfo = {
       | _ => None
       }
     | _ => None
-    }}
+    }
+  }
 }
 
 // Here's the corresponding datatype in Haskell:
-// https://github.com/agda/agda/blob/master/src/full/Agda/Interaction/Response.hs
+// https://github.com/agda/agda/blob/master/src/full/Agda/Interaction/Response/Base.hs
 // Note that, we are not trying to replicate that datatype,
 // just the portion conveyed by the Emacs Lisp protocol
 
