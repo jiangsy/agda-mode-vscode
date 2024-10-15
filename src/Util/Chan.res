@@ -157,10 +157,6 @@ module EventEmitter3 = {
   @send
   external removeAllListeners: t => t = "removeAllListeners"
 
-  // @send
-  // external removeAllListeners: t => t = "removeAllListeners"
-  // let removeAllListeners = removeAllListeners
-
   @send
   external removeAllListeners_: (t, array<eventName>) => t = "removeAllListeners"
   let removeAllListeners_ = (arg1, obj) => obj->removeAllListeners_(arg1)
