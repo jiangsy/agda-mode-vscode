@@ -122,6 +122,8 @@ module type Module = {
     int,
   ) => option<Promise.t<array<(VSCode.Range.t, Token.filepath, VSCode.Position.t)>>>
 
+  let lookupLocalSrcLoc: (t, int) => option<(Token.t, VSCode.Range.t)>
+
   let toDecorations: (t, VSCode.TextEditor.t) => array<(Editor.Decoration.t, array<VSCode.Range.t>)>
   let toDecorationsAndSemanticTokens: (
     t,
@@ -274,6 +276,10 @@ module Module: Module = {
         [(range, filepath, position)]
       })
     })
+  }
+
+  let lookupLocalSrcLoc = (self, offset): option<(Token.t, VSCode.Range.t)> => {
+    self.tokens->AVLTree.lowerBound(offset)
   }
 
   // for the new semantic highlighting

@@ -2,6 +2,8 @@
 open Belt
 
 let canonicalizeEscape = content => Js.String.replaceByRe(%re("/\\n|\\r\\n/g"), "\n", content)
+let insertSpaces = (offset, content) =>
+  Js.String.replaceByRe(%re("/\n/g"), "\n" ++ Js.String.repeat(offset, " "), content)
 let removeNewlines = string => string->Js.String2.split("\n")->Belt.Array.joinWith("\n", x => x)
 
 open Response
@@ -139,7 +141,14 @@ let rec handle = (
         // do nothing
         State__Goal.removeBoundaryAndDestroy(state, goal)->Promise.map(() => Ok())
       | GiveString(content) =>
-        State__Goal.modify(state, goal, _ => canonicalizeEscape(content))
+        let goalStart = fst(goal.interval)
+        let columnOffset = switch state.tokens->Tokens.lookupLocalSrcLoc(goalStart) {
+        | None => 0
+        | Some(_, range) => VSCode.Position.character(VSCode.Range.start(range))
+        }
+        State__Goal.modify(state, goal, _ =>
+          insertSpaces(1 + columnOffset, canonicalizeEscape(content))
+        )
         ->Promise.flatMap(() => State__Goal.removeBoundaryAndDestroy(state, goal))
         ->Promise.map(() => Ok())
       }
