@@ -417,18 +417,29 @@ let rec dispatchCommand = (state: State.t, command): Promise.t<
           }
           Node_path.format(newObj)
         }
-
-        // only select the ranges when it's on the same file
-        if removeRoot(path) == removeRoot(fileName) {
-          let ranges = intervals->Array.map(Editor.Range.fromAgdaInterval)
-          // set cursor selections
-          Editor.Selection.setMany(state.editor, ranges)
-          // scroll to that part of the document
+        let ranges = intervals->Array.map(Editor.Range.fromAgdaInterval)
+        let adjustEditor = editor => {
+          Editor.Selection.setMany(editor, ranges)
           ranges[0]->Option.forEach(range => {
-            state.editor->VSCode.TextEditor.revealRange(range, None)
+            editor->VSCode.TextEditor.revealRange(range, None)
           })
         }
-        Promise.resolved(Ok())
+
+        if removeRoot(path) == removeRoot(fileName) {
+          adjustEditor(state.editor)
+          Promise.resolved(Ok())
+        } else {
+          // TODO: check this option
+          let options = Some(VSCode.TextDocumentShowOptions.make(~preview=true, ()))
+
+          VSCode.Workspace.openTextDocumentWithFileName(fileName)
+          ->Promise.map(document =>
+            VSCode.Window.showTextDocumentWithShowOptions(document, options)->Promise.map(editor =>
+              adjustEditor(editor)
+            )
+          )
+          ->Promise.map(_ => Ok())
+        }
       | Hole(index) =>
         let goal = Js.Array.find((goal: Goal.t) => goal.index == index, state.goals)
         switch goal {
